@@ -1,0 +1,65 @@
+index 6e8ed85..b3d59ea 100644
+--- a/index.html
++++ b/index.html
+@@ -3,6 +3,7 @@
+         <title> AngularJS Sample</title>
+         <script src="js/angular.min.js"></script>
+ </head>
++
+ <!-- This block of angular code seems to execute as expected. The question is how to get the second block to execute or do I combine the two in some way? This angular code executes properly.-->
+ <div id="readApp" ng-app="readData" ng-controller="customersCtrl">
+
+@@ -16,33 +17,35 @@
+
+
+ <script>
+-var app = angular.module('readData', []);
+-app.controller('customersCtrl', function($scope, $http) {
++var app = angular.module('readData');
++app.controller('customersCtrl', ['$scope', '$http', function($scope, $http) {
+     $http.get("customers_mysql.php")
+     .then(function (response) {$scope.names = response.data.records;});
+-});
++}]);
+ </script>
+ </div>
++
++
+ <!-- This block of angular code does not execute. I don't think this angular app is correctly structured. It shows the fields and buttons but the code behind the button does not execute-->
+-<div id="writeApp" ng-app="writeData" ng-controller="empcontroller">
++<div id="writeApp" ng-controller="empCtrl">
+   <form>
+
+     Employee No. <input type="text" ng-model="empno"/><br />
+     First Name <input type="text" ng-model="fname"/><br />
+     Last Name <input type="text" ng-model="lname"/><br />
+     Department <input type="text" ng-model="dept"/><br />
+-    <input type="button" value="submit" ng-click="insertdata()" /><br />
++    <input type="button" value="submit"  ng-click="insertdata()" /><br />
+   </form>
+   <script>
+-  var app=angular.module('writeData',[]);
+-  app.controller('empcontroller',function($scope,$http){
++  var app=angular.module('readData').
++  controller('empCtrl',['$scope', '$http', function($scope,$http){
+     $scope.insertdata=function(){
+       $http.post("insert.php",{'empno':$scope.empno,'fname':$scope.fname,'lname':$scope.lname,'dept':$scope.dept}).success(function(data,status,headers,config){
+         console.log("data inserted successfully");
+       });
+     }
+-  });
+-  angular.bootstrap(document.getElementById("writeApp"),['namesList']);
++  }]);
++  angular.bootstrap(document.getElementById("readApp"),[]);
+   </script>
+
+
+@@ -51,8 +54,5 @@ app.controller('customersCtrl', function($scope, $http) {
+
+
+
+-
+-
+-
+ </div>
+ </html>

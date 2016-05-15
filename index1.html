@@ -1,0 +1,27 @@
+<html>
+   <head>
+        <title> AngularJS Sample</title>
+        <script src="js/angular.min.js"></script>
+
+
+    </head>
+    <body>
+        <div ng-app="myApp" ng-controller="azizController">
+          <form>
+            Testinput <input type="text" ng-model="azname"/><br/>
+            <input type="button" value="submit" ng-click="insertdata()"/>
+          </form>
+          <script>
+          var app = angular.module('myApp',[]);
+          app.controller('azizController',function($scope,$http){
+            $scope.insertdata=function(){
+              $http.post("insert.php",{'azname':$scope.azname})
+              .success(function(data,status,headers,config){
+                console.log("data inserted successfully");
+              });
+            }
+          });
+          </script>
+        </div>
+    </body>
+</html>
